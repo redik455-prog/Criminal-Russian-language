@@ -4,449 +4,1183 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="theme-color" content="#0a0a0a">
+    <meta name="description" content="CAMP CRIMINAL RUSSIA v8.0 - Лучший мобильный RPG сервер">
     <link rel="manifest" href="manifest.json">
-    <title>🏕️ CAMP CRIMINAL RUSSIA v5.0</title>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏕️</text></svg>">
+    <title>🏕️ CAMP CRIMINAL RUSSIA v8.0</title>
+    
     <style>
         :root {
             --bg: #0a0a0a;
+            --bg2: #0d0d0d;
             --card: #1a1a1a;
+            --card2: #1e1e1e;
+            --card3: #222222;
             --gold: #ffd700;
             --gold2: #b8960f;
-            --green: #00ff00;
+            --gold3: #ffed4a;
+            --gold-glow: rgba(255, 215, 0, 0.3);
+            --green: #00ff88;
+            --green2: #00cc6a;
             --red: #ff4444;
+            --red2: #cc0000;
             --blue: #4488ff;
+            --blue2: #3366cc;
             --purple: #aa44ff;
-            --text: #fff;
-            --text2: #aaa;
-            --text3: #666;
+            --purple2: #8833cc;
+            --cyan: #00ddff;
+            --orange: #ff8800;
+            --pink: #ff44aa;
+            --text: #ffffff;
+            --text2: #cccccc;
+            --text3: #888888;
+            --text4: #555555;
+            --border: #2a2a2a;
+            --border2: #333333;
+            --radius: 12px;
+            --radius2: 16px;
+            --radius3: 24px;
+            --shadow: 0 4px 15px rgba(0,0,0,0.5);
+            --shadow-gold: 0 4px 25px rgba(255,215,0,0.2);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
+
         * { margin: 0; padding: 0; box-sizing: border-box; }
+
         body {
             background: var(--bg);
             color: var(--text);
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
             min-height: 100vh;
+            overflow-x: hidden;
             -webkit-tap-highlight-color: transparent;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            scroll-behavior: smooth;
         }
-        
-        /* HEADER */
-        .header {
-            background: #111;
-            padding: 12px 16px;
+
+        /* ============ ЧАСТИЦЫ ФОНА ============ */
+        #particles {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            pointer-events: none;
+            animation: particleFloat linear infinite;
+        }
+
+        @keyframes particleFloat {
+            0% { transform: translateY(100vh) translateX(0) scale(0); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(-10vh) translateX(100px) scale(1); opacity: 0; }
+        }
+
+        /* ============ ОСНОВНОЙ КОНТЕЙНЕР ============ */
+        #app {
+            position: relative;
+            z-index: 1;
+            max-width: 900px;
+            margin: 0 auto;
+            min-height: 100vh;
+        }
+
+        /* ============ ПРЕЛОАДЕР ============ */
+        #preloader {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: var(--bg);
+            z-index: 10000;
             display: flex;
             align-items: center;
-            gap: 10px;
-            border-bottom: 2px solid var(--gold2);
+            justify-content: center;
+            transition: opacity 0.5s, visibility 0.5s;
+        }
+
+        #preloader.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .preloader-content {
+            text-align: center;
+        }
+
+        .preloader-logo {
+            font-size: 80px;
+            animation: preloaderPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes preloaderPulse {
+            0%, 100% { transform: scale(1); filter: brightness(1); }
+            50% { transform: scale(1.1); filter: brightness(1.5); }
+        }
+
+        .preloader-bar {
+            width: 200px;
+            height: 4px;
+            background: var(--border);
+            border-radius: 2px;
+            margin: 20px auto;
+            overflow: hidden;
+        }
+
+        .preloader-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--gold2), var(--gold), var(--gold3));
+            border-radius: 2px;
+            animation: preloaderFill 1.5s ease-in-out infinite;
+            width: 30%;
+        }
+
+        @keyframes preloaderFill {
+            0% { width: 0%; margin-left: 0; }
+            50% { width: 100%; margin-left: 0; }
+            100% { width: 0%; margin-left: 100%; }
+        }
+
+        .preloader-text {
+            color: var(--text3);
+            font-size: 13px;
+            animation: preloaderText 2s ease-in-out infinite;
+        }
+
+        @keyframes preloaderText {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+
+        /* ============ ШАПКА ============ */
+        .header {
             position: sticky;
             top: 0;
             z-index: 1000;
-        }
-        
-        /* NAV */
-        .nav {
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 2px solid var(--gold2);
+            padding: 12px 16px;
             display: flex;
-            background: #111;
-            border-bottom: 1px solid #222;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .header-logo {
+            font-size: 32px;
+            animation: logoFloat 3s ease-in-out infinite;
+            filter: drop-shadow(0 0 10px var(--gold-glow));
+        }
+
+        @keyframes logoFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+
+        .header-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .header-title {
+            font-size: 16px;
+            font-weight: 900;
+            color: var(--gold);
+            letter-spacing: 1px;
+            background: linear-gradient(135deg, var(--gold), var(--gold3), var(--gold));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header-subtitle {
+            font-size: 10px;
+            color: var(--text3);
+            letter-spacing: 2px;
+        }
+
+        .header-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            background: linear-gradient(135deg, var(--green), var(--green2));
+            color: #000;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: bold;
+            animation: badgePulse 2s ease-in-out infinite;
+        }
+
+        @keyframes badgePulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(0, 255, 136, 0.4); }
+            50% { box-shadow: 0 0 0 10px rgba(0, 255, 136, 0); }
+        }
+
+        /* ============ НАВИГАЦИЯ ============ */
+        .nav {
+            position: sticky;
+            top: 60px;
+            z-index: 999;
+            background: rgba(13, 13, 13, 0.95);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            display: flex;
             overflow-x: auto;
             -webkit-overflow-scrolling: touch;
-            position: sticky;
-            top: 54px;
-            z-index: 999;
+            scrollbar-width: none;
+            border-bottom: 1px solid var(--border);
+            padding: 0 8px;
         }
+
         .nav::-webkit-scrollbar { display: none; }
+
         .nav-btn {
             flex: 1 0 auto;
-            padding: 12px 16px;
+            padding: 12px 14px;
             background: none;
             border: none;
-            color: var(--text2);
-            font-size: 13px;
+            color: var(--text3);
+            font-size: 12px;
+            font-weight: 600;
             cursor: pointer;
             white-space: nowrap;
             border-bottom: 2px solid transparent;
-            transition: all 0.3s;
+            transition: var(--transition);
+            position: relative;
+            min-width: 60px;
+            text-align: center;
         }
-        .nav-btn.active { color: var(--gold); border-bottom-color: var(--gold); }
-        
-        /* MAIN */
-        .container { max-width: 900px; margin: 0 auto; padding: 16px; }
-        .tab { display: none; animation: fadeIn 0.3s ease; }
-        .tab.active { display: block; }
-        
-        /* HERO */
-        .hero { text-align: center; padding: 30px 0; }
-        .hero-logo { font-size: 100px; animation: float 3s ease-in-out infinite; }
-        .hero-title { font-size: 28px; color: var(--gold); margin: 12px 0; letter-spacing: 2px; }
+
+        .nav-btn .nav-icon {
+            display: block;
+            font-size: 20px;
+            margin-bottom: 2px;
+        }
+
+        .nav-btn.active {
+            color: var(--gold);
+            border-bottom-color: var(--gold);
+        }
+
+        .nav-btn.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 20px;
+            height: 3px;
+            background: var(--gold);
+            border-radius: 2px;
+            box-shadow: 0 0 10px var(--gold-glow);
+        }
+
+        .nav-btn:active {
+            background: rgba(255, 215, 0, 0.05);
+        }
+
+        /* ============ КОНТЕНТ ============ */
+        .content {
+            padding: 16px;
+            padding-bottom: 100px;
+        }
+
+        .tab {
+            display: none;
+            animation: tabFadeIn 0.4s ease;
+        }
+
+        .tab.active {
+            display: block;
+        }
+
+        @keyframes tabFadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ============ HERO СЕКЦИЯ ============ */
+        .hero {
+            text-align: center;
+            padding: 30px 0 20px;
+            position: relative;
+        }
+
+        .hero-glow {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, var(--gold-glow) 0%, transparent 70%);
+            pointer-events: none;
+            animation: heroGlowPulse 3s ease-in-out infinite;
+        }
+
+        @keyframes heroGlowPulse {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.5; }
+            50% { transform: translate(-50%, -50%) scale(1.3); opacity: 0.8; }
+        }
+
+        .hero-logo {
+            font-size: 100px;
+            position: relative;
+            z-index: 1;
+            animation: heroFloat 3s ease-in-out infinite;
+            filter: drop-shadow(0 10px 30px var(--gold-glow));
+        }
+
+        @keyframes heroFloat {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            25% { transform: translateY(-15px) rotate(-3deg); }
+            75% { transform: translateY(-15px) rotate(3deg); }
+        }
+
+        .hero-title {
+            font-size: 32px;
+            font-weight: 900;
+            margin: 16px 0 8px;
+            background: linear-gradient(135deg, var(--gold), var(--gold3), var(--orange), var(--gold));
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: heroTitleShine 3s ease-in-out infinite;
+        }
+
+        @keyframes heroTitleShine {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .hero-badges {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 8px;
+            margin: 12px 0;
+        }
+
         .badge {
             display: inline-block;
-            padding: 5px 14px;
+            padding: 6px 14px;
             border-radius: 20px;
-            font-size: 12px;
-            font-weight: bold;
-            margin: 4px;
+            font-size: 11px;
+            font-weight: 700;
+            animation: badgePopIn 0.5s ease backwards;
         }
-        .badge-new { background: var(--green); color: #000; }
-        .badge-hot { background: var(--red); color: #fff; animation: pulse 1.5s ease-in-out infinite; }
-        
-        /* BUTTONS */
-        .btn {
-            display: block;
-            width: 100%;
-            padding: 16px;
-            border: none;
-            border-radius: 12px;
+
+        .badge:nth-child(1) { animation-delay: 0.1s; }
+        .badge:nth-child(2) { animation-delay: 0.2s; }
+        .badge:nth-child(3) { animation-delay: 0.3s; }
+        .badge:nth-child(4) { animation-delay: 0.4s; }
+        .badge:nth-child(5) { animation-delay: 0.5s; }
+
+        @keyframes badgePopIn {
+            from { opacity: 0; transform: scale(0.5); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .badge-gold { background: linear-gradient(135deg, var(--gold), var(--gold2)); color: #000; }
+        .badge-green { background: linear-gradient(135deg, var(--green), var(--green2)); color: #000; }
+        .badge-red { background: linear-gradient(135deg, var(--red), var(--red2)); color: #fff; animation: badgePulse 2s ease-in-out infinite; }
+        .badge-purple { background: linear-gradient(135deg, var(--purple), var(--purple2)); color: #fff; }
+        .badge-cyan { background: linear-gradient(135deg, var(--cyan), var(--blue2)); color: #000; }
+
+        .hero-desc {
+            color: var(--text2);
+            font-size: 14px;
+            line-height: 1.6;
+            max-width: 500px;
+            margin: 16px auto;
+        }
+
+        /* ============ ОНЛАЙН СЧЁТЧИК ============ */
+        .online-counter {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--card);
+            padding: 10px 20px;
+            border-radius: 25px;
+            border: 1px solid var(--border);
+            margin: 16px 0;
+            animation: counterPulse 3s ease-in-out infinite;
+        }
+
+        @keyframes counterPulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(0, 255, 136, 0.2); }
+            50% { box-shadow: 0 0 0 15px rgba(0, 255, 136, 0); }
+        }
+
+        .online-dot {
+            width: 10px;
+            height: 10px;
+            background: var(--green);
+            border-radius: 50%;
+            animation: onlineDotPulse 1.5s ease-in-out infinite;
+        }
+
+        @keyframes onlineDotPulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(0, 255, 136, 0.6); }
+            50% { box-shadow: 0 0 0 8px rgba(0, 255, 136, 0); }
+        }
+
+        .online-count {
+            font-weight: 700;
+            color: var(--green);
             font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            margin: 10px 0;
-            text-align: center;
-            transition: all 0.3s;
-            text-decoration: none;
         }
-        .btn:active { transform: scale(0.97); }
-        .btn-primary { background: linear-gradient(135deg, var(--gold), var(--gold2)); color: #000; }
-        .btn-secondary { background: var(--card); color: var(--text); border: 1px solid #333; }
-        
-        /* STATS */
+
+        /* ============ СТАТИСТИКА ============ */
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
             gap: 8px;
             margin: 20px 0;
         }
+
         .stat-card {
             background: var(--card);
             padding: 16px 8px;
-            border-radius: 12px;
+            border-radius: var(--radius);
             text-align: center;
-            border: 1px solid #2a2a2a;
+            border: 1px solid var(--border);
+            transition: var(--transition);
+            cursor: pointer;
+            animation: statFadeIn 0.5s ease backwards;
         }
-        .stat-icon { font-size: 28px; margin-bottom: 4px; }
-        .stat-val { font-size: 18px; color: var(--gold); font-weight: bold; }
-        .stat-lbl { font-size: 10px; color: var(--text3); margin-top: 2px; }
-        
-        /* SERVER LIST */
+
+        .stat-card:nth-child(1) { animation-delay: 0.1s; }
+        .stat-card:nth-child(2) { animation-delay: 0.2s; }
+        .stat-card:nth-child(3) { animation-delay: 0.3s; }
+        .stat-card:nth-child(4) { animation-delay: 0.4s; }
+
+        @keyframes statFadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .stat-card:hover {
+            border-color: var(--gold);
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-gold);
+        }
+
+        .stat-icon {
+            font-size: 28px;
+            margin-bottom: 6px;
+        }
+
+        .stat-val {
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--gold);
+        }
+
+        .stat-lbl {
+            font-size: 10px;
+            color: var(--text3);
+            margin-top: 4px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* ============ КНОПКИ ============ */
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 16px;
+            border: none;
+            border-radius: var(--radius);
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            margin: 10px 0;
+            text-align: center;
+            text-decoration: none;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .btn::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .btn:active::after {
+            width: 300px;
+            height: 300px;
+        }
+
+        .btn:active {
+            transform: scale(0.96);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--gold), var(--gold2));
+            color: #000;
+            font-size: 17px;
+            box-shadow: var(--shadow-gold);
+            animation: btnGlow 2s ease-in-out infinite;
+        }
+
+        @keyframes btnGlow {
+            0%, 100% { box-shadow: 0 4px 20px rgba(255, 215, 0, 0.3); }
+            50% { box-shadow: 0 4px 35px rgba(255, 215, 0, 0.5); }
+        }
+
+        .btn-secondary {
+            background: var(--card);
+            color: var(--text);
+            border: 1px solid var(--border2);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, var(--green), var(--green2));
+            color: #000;
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, var(--red), var(--red2));
+            color: #fff;
+        }
+
+        /* ============ КАРТОЧКИ СЕРВЕРОВ ============ */
         .server-card {
             background: var(--card);
-            border-radius: 12px;
+            border-radius: var(--radius2);
             padding: 16px;
             margin-bottom: 10px;
-            border: 1px solid #2a2a2a;
+            border: 1px solid var(--border);
             display: flex;
             align-items: center;
             gap: 12px;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: var(--transition);
+            animation: serverFadeIn 0.5s ease backwards;
         }
-        .server-card:hover { border-color: var(--gold); }
-        .server-dot { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; }
-        .server-dot.online { background: var(--green); box-shadow: 0 0 10px rgba(0,255,0,0.5); }
-        .server-info { flex: 1; }
-        .server-name { font-weight: bold; font-size: 15px; }
-        .server-players { font-size: 12px; color: var(--text2); }
-        .server-ping { font-size: 12px; color: var(--green); }
-        
-        /* MODALS */
-        .modal {
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background: rgba(0,0,0,0.9);
-            z-index: 9999;
+
+        .server-card:nth-child(1) { animation-delay: 0.1s; }
+        .server-card:nth-child(2) { animation-delay: 0.2s; }
+        .server-card:nth-child(3) { animation-delay: 0.3s; }
+
+        @keyframes serverFadeIn {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .server-card:hover {
+            border-color: var(--gold);
+            transform: translateX(5px);
+            box-shadow: var(--shadow-gold);
+        }
+
+        .server-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .server-dot.online {
+            background: var(--green);
+            box-shadow: 0 0 15px rgba(0, 255, 136, 0.5);
+            animation: onlineDotPulse 1.5s ease-in-out infinite;
+        }
+
+        .server-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .server-name {
+            font-weight: 700;
+            font-size: 15px;
+        }
+
+        .server-meta {
+            font-size: 11px;
+            color: var(--text3);
+            margin-top: 2px;
+        }
+
+        .server-ping {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--green);
+        }
+
+        .server-btn {
+            padding: 8px 16px;
+            background: var(--gold);
+            color: #000;
+            border: none;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 12px;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: var(--transition);
+        }
+
+        .server-btn:hover {
+            background: var(--gold3);
+        }
+
+        /* ============ СЕКЦИИ ============ */
+        .section-title {
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--gold);
+            margin: 24px 0 16px;
             display: flex;
             align-items: center;
-            justify-content: center;
+            gap: 10px;
         }
-        .modal-content {
+
+        .section-title::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(90deg, var(--gold-glow), transparent);
+        }
+
+        /* ============ СЕТКИ ============ */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+            gap: 8px;
+        }
+
+        .feature-card {
             background: var(--card);
-            border-radius: 20px;
-            padding: 24px;
-            width: 90%;
-            max-width: 400px;
-            border: 2px solid var(--gold);
+            padding: 16px 10px;
+            border-radius: var(--radius);
             text-align: center;
+            border: 1px solid var(--border);
+            transition: var(--transition);
+            cursor: pointer;
         }
-        
-        /* ANIMATIONS */
-        @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-20px); }
+
+        .feature-card:hover {
+            border-color: var(--gold);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-gold);
         }
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.6; }
+
+        .feature-icon {
+            font-size: 32px;
+            margin-bottom: 8px;
+            transition: var(--transition);
         }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+
+        .feature-card:hover .feature-icon {
+            transform: scale(1.2);
         }
-        
-        /* PROGRESS */
+
+        .feature-name {
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        /* ============ ПРОГРЕСС БАР ============ */
+        .progress-container {
+            margin: 16px 0;
+            display: none;
+        }
+
         .progress-bar {
             width: 100%;
             height: 8px;
-            background: #2a2a2a;
+            background: var(--border);
             border-radius: 4px;
             overflow: hidden;
-            margin: 16px 0;
         }
+
         .progress-fill {
             height: 100%;
-            background: var(--gold);
+            background: linear-gradient(90deg, var(--gold2), var(--gold), var(--gold3));
             border-radius: 4px;
             width: 0%;
-            transition: width 0.5s;
+            transition: width 0.5s ease;
+            position: relative;
         }
-        
-        /* TOAST */
-        .toast {
+
+        .progress-fill::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            animation: progressShine 1.5s ease-in-out infinite;
+        }
+
+        @keyframes progressShine {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .progress-text {
+            font-size: 12px;
+            color: var(--text3);
+            text-align: center;
+            margin-top: 6px;
+        }
+
+        /* ============ ТОСТ ============ */
+        .toast-container {
             position: fixed;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            pointer-events: none;
+        }
+
+        .toast {
             background: var(--card);
-            padding: 12px 24px;
-            border-radius: 12px;
+            padding: 12px 20px;
+            border-radius: var(--radius);
             border: 1px solid var(--gold);
             font-size: 14px;
+            font-weight: 600;
+            pointer-events: auto;
+            animation: toastIn 0.4s ease, toastOut 0.4s ease 2.5s forwards;
+            box-shadow: var(--shadow-gold);
+            max-width: 300px;
+        }
+
+        @keyframes toastIn {
+            from { opacity: 0; transform: translateX(100px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        @keyframes toastOut {
+            from { opacity: 1; transform: translateX(0); }
+            to { opacity: 0; transform: translateX(100px); }
+        }
+
+        /* ============ МОДАЛЬНОЕ ОКНО ============ */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8);
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
             z-index: 10000;
-            animation: fadeIn 0.3s ease;
-        }
-        
-        /* ONLINE COUNTER */
-        .online-counter {
-            background: var(--card);
-            border-radius: 20px;
-            padding: 8px 16px;
-            display: inline-flex;
+            display: flex;
             align-items: center;
-            gap: 8px;
-            font-size: 13px;
-            margin: 12px 0;
+            justify-content: center;
+            animation: modalFadeIn 0.3s ease;
         }
-        .online-dot {
-            width: 8px;
-            height: 8px;
-            background: var(--green);
+
+        @keyframes modalFadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal {
+            background: var(--card);
+            border-radius: var(--radius3);
+            padding: 30px;
+            width: 90%;
+            max-width: 420px;
+            border: 2px solid var(--gold);
+            text-align: center;
+            animation: modalScaleIn 0.4s ease;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+        }
+
+        @keyframes modalScaleIn {
+            from { opacity: 0; transform: scale(0.8); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .modal-icon {
+            font-size: 64px;
+            margin-bottom: 16px;
+            animation: modalIconBounce 0.6s ease;
+        }
+
+        @keyframes modalIconBounce {
+            0% { transform: scale(0); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+
+        .modal-title {
+            font-size: 22px;
+            font-weight: 800;
+            color: var(--gold);
+            margin-bottom: 8px;
+        }
+
+        .modal-text {
+            font-size: 14px;
+            color: var(--text2);
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        /* ============ ФУТЕР ============ */
+        .footer {
+            text-align: center;
+            padding: 30px 0;
+            border-top: 1px solid var(--border);
+            margin-top: 40px;
+        }
+
+        .footer-text {
+            font-size: 12px;
+            color: var(--text4);
+        }
+
+        .footer-social {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            margin: 16px 0;
+        }
+
+        .social-btn {
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
-            animation: pulse 2s ease-in-out infinite;
+            background: var(--card);
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .social-btn:hover {
+            border-color: var(--gold);
+            background: rgba(255, 215, 0, 0.1);
+            transform: translateY(-3px);
+        }
+
+        /* ============ АДАПТИВ ============ */
+        @media (max-width: 480px) {
+            .hero-logo { font-size: 70px; }
+            .hero-title { font-size: 24px; }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .features-grid { grid-template-columns: repeat(3, 1fr); }
+            .nav-btn { padding: 10px 8px; font-size: 10px; }
+            .nav-btn .nav-icon { font-size: 16px; }
         }
     </style>
 </head>
 <body>
-    <!-- HEADER -->
-    <div class="header">
-        <span style="font-size:32px">🏕️</span>
-        <span style="flex:1;font-size:18px;color:var(--gold);font-weight:900;">CAMP CRIMINAL RUSSIA</span>
-        <span class="badge badge-new">v5.0</span>
+    <!-- ПРЕЛОАДЕР -->
+    <div id="preloader">
+        <div class="preloader-content">
+            <div class="preloader-logo">🏕️</div>
+            <div class="preloader-bar"><div class="preloader-fill"></div></div>
+            <p class="preloader-text">Загрузка лаунчера...</p>
+        </div>
     </div>
 
-    <!-- NAVIGATION -->
-    <div class="nav">
-        <button class="nav-btn active" onclick="switchTab('home')">🏠 Главная</button>
-        <button class="nav-btn" onclick="switchTab('launcher')">📥 Лаунчер</button>
-        <button class="nav-btn" onclick="switchTab('servers')">🌐 Сервера</button>
-        <button class="nav-btn" onclick="switchTab('vehicles')">🏎️ Машины</button>
-        <button class="nav-btn" onclick="switchTab('skins')">👤 Скины</button>
-        <button class="nav-btn" onclick="switchTab('account')">👑 Аккаунт</button>
-    </div>
+    <!-- ЧАСТИЦЫ ФОНА -->
+    <div id="particles"></div>
 
-    <!-- CONTENT -->
-    <div class="container">
-        
-        <!-- HOME TAB -->
-        <div id="tab-home" class="tab active">
-            <div class="hero">
-                <div class="hero-logo">👑</div>
-                <h1 class="hero-title">LEGENDARY EDITION</h1>
-                <p style="color:var(--text2);margin:8px 0;">
-                    <span class="badge badge-new">100+ МАШИН</span>
-                    <span class="badge badge-hot">200+ СКИНОВ</span>
-                    <span class="badge badge-new">3D HUD</span>
-                </p>
-                
-                <div class="online-counter">
-                    <div class="online-dot"></div>
-                    <span id="onlineCount">1 247</span> игроков онлайн
-                </div>
+    <!-- ОСНОВНОЕ ПРИЛОЖЕНИЕ -->
+    <div id="app">
+        <!-- ШАПКА -->
+        <header class="header">
+            <span class="header-logo">🏕️</span>
+            <div class="header-info">
+                <div class="header-title">CAMP CRIMINAL RUSSIA</div>
+                <div class="header-subtitle">ABSOLUTE EDITION</div>
             </div>
-            
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <div class="stat-icon">🏎️</div>
-                    <div class="stat-val">100+</div>
-                    <div class="stat-lbl">Машин</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon">👤</div>
-                    <div class="stat-val">200+</div>
-                    <div class="stat-lbl">Скинов</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon">🎨</div>
-                    <div class="stat-val">3D</div>
-                    <div class="stat-lbl">HUD</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon">📊</div>
-                    <div class="stat-val">30+</div>
-                    <div class="stat-lbl">Систем</div>
-                </div>
-            </div>
-            
-            <a href="#" class="btn btn-primary" onclick="switchTab('launcher')">
-                📥 СКАЧАТЬ ЛАУНЧЕР v5.0
-            </a>
-        </div>
+            <span class="header-badge">v8.0</span>
+        </header>
 
-        <!-- LAUNCHER TAB -->
-        <div id="tab-launcher" class="tab">
-            <h2 style="color:var(--gold);text-align:center;margin:20px 0;">📥 СКАЧАТЬ ЛАУНЧЕР</h2>
-            
-            <div style="background:var(--card);border-radius:16px;padding:24px;text-align:center;border:1px solid var(--gold);">
-                <div style="font-size:64px;margin-bottom:16px;">📱</div>
-                <h3>Criminal Russia Launcher v5.0</h3>
-                <p style="color:var(--text2);margin:8px 0;">Размер: 52.4 MB | Android 5.0+</p>
-                
-                <button class="btn btn-primary" onclick="startDownload()">
-                    📥 СКАЧАТЬ APK
-                </button>
-                
-                <div class="progress-bar" id="progressBar" style="display:none;">
-                    <div class="progress-fill" id="progressFill"></div>
-                </div>
-                <p id="progressText" style="color:var(--text3);font-size:12px;display:none;"></p>
-            </div>
-            
-            <div style="margin-top:20px;font-size:13px;color:var(--text2);line-height:1.6;">
-                <h4 style="color:var(--gold);">Что включает лаунчер:</h4>
-                <p>✅ MTA Mobile</p>
-                <p>✅ 100+ машин</p>
-                <p>✅ 200+ скинов</p>
-                <p>✅ 3D HUD</p>
-                <p>✅ Все системы сервера</p>
-                <p>✅ Автоподключение</p>
-            </div>
-        </div>
+        <!-- НАВИГАЦИЯ -->
+        <nav class="nav">
+            <button class="nav-btn active" onclick="switchTab('home')">
+                <span class="nav-icon">🏠</span>Главная
+            </button>
+            <button class="nav-btn" onclick="switchTab('launcher')">
+                <span class="nav-icon">📥</span>Лаунчер
+            </button>
+            <button class="nav-btn" onclick="switchTab('servers')">
+                <span class="nav-icon">🌐</span>Сервера
+            </button>
+            <button class="nav-btn" onclick="switchTab('features')">
+                <span class="nav-icon">🚀</span>Системы
+            </button>
+            <button class="nav-btn" onclick="switchTab('account')">
+                <span class="nav-icon">👤</span>Аккаунт
+            </button>
+        </nav>
 
-        <!-- SERVERS TAB -->
-        <div id="tab-servers" class="tab">
-            <h2 style="color:var(--gold);margin:20px 0;">🌐 СЕРВЕРА</h2>
-            
-            <div class="server-card" onclick="connectServer('51.89.123.45:22003')">
-                <div class="server-dot online"></div>
-                <div class="server-info">
-                    <div class="server-name">CAMP #1 | LEGENDARY</div>
-                    <div class="server-players">👥 85/200 • 🗺️ Los Santos</div>
+        <!-- КОНТЕНТ -->
+        <div class="content">
+            <!-- ГЛАВНАЯ -->
+            <div id="tab-home" class="tab active">
+                <div class="hero">
+                    <div class="hero-glow"></div>
+                    <div class="hero-logo">👑</div>
+                    <h1 class="hero-title">CAMP CRIMINAL RUSSIA</h1>
+                    <div class="hero-badges">
+                        <span class="badge badge-gold">🏎️ 100+ МАШИН</span>
+                        <span class="badge badge-green">👤 200+ СКИНОВ</span>
+                        <span class="badge badge-red">🛡️ АНТИЧИТ</span>
+                        <span class="badge badge-purple">🤖 АНТИБОТ</span>
+                        <span class="badge badge-cyan">🎨 3D HUD</span>
+                    </div>
+                    <p class="hero-desc">
+                        Легендарный мобильный RPG сервер с 53+ системами, 
+                        стабильной экономикой и максимальной защитой!
+                    </p>
+                    
+                    <div class="online-counter">
+                        <div class="online-dot"></div>
+                        <span class="online-count" id="onlineCount">1 247</span>
+                        <span style="color:var(--text3);font-size:13px;">игроков онлайн</span>
+                    </div>
                 </div>
-                <span class="server-ping">45ms</span>
-            </div>
-            
-            <div class="server-card" onclick="connectServer('51.89.123.46:22003')">
-                <div class="server-dot online"></div>
-                <div class="server-info">
-                    <div class="server-name">CAMP #2 | PREMIUM</div>
-                    <div class="server-players">👥 42/100 • 🗺️ San Fierro</div>
-                </div>
-                <span class="server-ping">52ms</span>
-            </div>
-            
-            <div class="server-card" onclick="connectServer('51.89.123.47:22003')">
-                <div class="server-dot online"></div>
-                <div class="server-info">
-                    <div class="server-name">CAMP #3 | FREE</div>
-                    <div class="server-players">👥 128/300 • 🗺️ Las Venturas</div>
-                </div>
-                <span class="server-ping">38ms</span>
-            </div>
-        </div>
 
-        <!-- VEHICLES TAB -->
-        <div id="tab-vehicles" class="tab">
-            <h2 style="color:var(--gold);margin:20px 0;">🏎️ МАШИНЫ (100+)</h2>
-            
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
-                <div style="background:var(--card);padding:16px;border-radius:12px;text-align:center;">
-                    <div style="font-size:32px;">👑</div>
-                    <div style="font-weight:bold;color:var(--gold);">Legendary</div>
-                    <div style="font-size:12px;color:var(--text2);">5 машин</div>
-                </div>
-                <div style="background:var(--card);padding:16px;border-radius:12px;text-align:center;">
-                    <div style="font-size:32px;">🚀</div>
-                    <div style="font-weight:bold;color:#ff5555;">Hypercar</div>
-                    <div style="font-size:12px;color:var(--text2);">8 машин</div>
-                </div>
-                <div style="background:var(--card);padding:16px;border-radius:12px;text-align:center;">
-                    <div style="font-size:32px;">🏎️</div>
-                    <div style="font-weight:bold;color:#ff55aa;">Supercar</div>
-                    <div style="font-size:12px;color:var(--text2);">12 машин</div>
-                </div>
-                <div style="background:var(--card);padding:16px;border-radius:12px;text-align:center;">
-                    <div style="font-size:32px;">⚡</div>
-                    <div style="font-weight:bold;color:#5599ff;">Sport</div>
-                    <div style="font-size:12px;color:var(--text2);">15 машин</div>
-                </div>
-            </div>
-            
-            <h4 style="color:var(--gold);margin-top:16px;">🎯 Особые возможности:</h4>
-            <p style="color:var(--text2);font-size:13px;">💡 Неоновая подсветка | 🏎️ Дрифт система | 🤖 Автопилот | 🚁 Авиация</p>
-        </div>
-
-        <!-- SKINS TAB -->
-        <div id="tab-skins" class="tab">
-            <h2 style="color:var(--gold);margin:20px 0;">👤 СКИНЫ (200+)</h2>
-            
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
-                <div style="background:var(--card);padding:12px;border-radius:8px;text-align:center;">
-                    <span style="font-size:24px;">👨</span><br>
-                    <span style="font-size:13px;">Мужские (80)</span>
-                </div>
-                <div style="background:var(--card);padding:12px;border-radius:8px;text-align:center;">
-                    <span style="font-size:24px;">👩</span><br>
-                    <span style="font-size:13px;">Женские (60)</span>
-                </div>
-                <div style="background:var(--card);padding:12px;border-radius:8px;text-align:center;">
-                    <span style="font-size:24px;">💎</span><br>
-                    <span style="font-size:13px;">Эксклюзивные (30)</span>
-                </div>
-                <div style="background:var(--card);padding:12px;border-radius:8px;text-align:center;">
-                    <span style="font-size:24px;">👑</span><br>
-                    <span style="font-size:13px;">Legendary (15)</span>
-                </div>
-            </div>
-        </div>
-
-        <!-- ACCOUNT TAB -->
-        <div id="tab-account" class="tab">
-            <h2 style="color:var(--gold);margin:20px 0;">👑 ЛИЧНЫЙ КАБИНЕТ</h2>
-            
-            <div style="background:var(--card);border-radius:16px;padding:24px;border:1px solid #2a2a2a;">
-                <div style="text-align:center;margin-bottom:20px;">
-                    <div style="font-size:64px;">👤</div>
-                    <h3>Игрок</h3>
-                    <p style="color:var(--text2);">Уровень: 1</p>
-                </div>
-                
                 <div class="stats-grid">
                     <div class="stat-card">
-                        <div class="stat-val">$0</div>
-                        <div class="stat-lbl">Наличные</div>
+                        <div class="stat-icon">🏎️</div>
+                        <div class="stat-val">100+</div>
+                        <div class="stat-lbl">Машин</div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-val">$0</div>
-                        <div class="stat-lbl">Банк</div>
+                        <div class="stat-icon">👤</div>
+                        <div class="stat-val">200+</div>
+                        <div class="stat-lbl">Скинов</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">⚙️</div>
+                        <div class="stat-val">53+</div>
+                        <div class="stat-lbl">Систем</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">🛡️</div>
+                        <div class="stat-val">7.0</div>
+                        <div class="stat-lbl">Защита</div>
                     </div>
                 </div>
-                
-                <button class="btn btn-primary" onclick="alert('Войдите через лаунчер')">
-                    ВОЙТИ
+
+                <button class="btn btn-primary" onclick="switchTab('launcher')">
+                    📥 СКАЧАТЬ ЛАУНЧЕР v8.0
+                </button>
+                <button class="btn btn-secondary" onclick="switchTab('servers')">
+                    🌐 ПОДКЛЮЧИТЬСЯ К СЕРВЕРУ
                 </button>
             </div>
+
+            <!-- ЛАУНЧЕР -->
+            <div id="tab-launcher" class="tab">
+                <h2 class="section-title">📥 СКАЧАТЬ ЛАУНЧЕР</h2>
+                
+                <div style="background:var(--card);border-radius:var(--radius2);padding:30px;text-align:center;border:1px solid var(--gold);">
+                    <div style="font-size:80px;animation:heroFloat 3s ease-in-out infinite;">📱</div>
+                    <h3 style="color:var(--gold);margin:16px 0;">Criminal Russia Launcher v8.0</h3>
+                    <p style="color:var(--text2);font-size:14px;">Размер: 58.3 MB • Android 5.0+</p>
+                    <p style="color:var(--text3);font-size:12px;margin:8px 0;">Включает все системы, машины, скины и HUD</p>
+                    
+                    <button class="btn btn-primary" onclick="startDownload()" id="downloadBtn">
+                        📥 СКАЧАТЬ APK
+                    </button>
+                    
+                    <div class="progress-container" id="progressContainer">
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="progressFill"></div>
+                        </div>
+                        <div class="progress-text" id="progressText">Подготовка...</div>
+                    </div>
+                </div>
+
+                <h3 class="section-title">📦 ЧТО ВКЛЮЧЕНО:</h3>
+                <div class="features-grid">
+                    <div class="feature-card"><div class="feature-icon">🏎️</div><div class="feature-name">100+ Машин</div></div>
+                    <div class="feature-card"><div class="feature-icon">👤</div><div class="feature-name">200+ Скинов</div></div>
+                    <div class="feature-card"><div class="feature-icon">🎨</div><div class="feature-name">3D HUD</div></div>
+                    <div class="feature-card"><div class="feature-icon">🛡️</div><div class="feature-name">Античит</div></div>
+                    <div class="feature-card"><div class="feature-icon">🤖</div><div class="feature-name">Антибот</div></div>
+                    <div class="feature-card"><div class="feature-icon">💎</div><div class="feature-name">Донат</div></div>
+                    <div class="feature-card"><div class="feature-icon">🏠</div><div class="feature-name">Дома</div></div>
+                    <div class="feature-card"><div class="feature-icon">💼</div><div class="feature-name">Бизнесы</div></div>
+                    <div class="feature-card"><div class="feature-icon">🔫</div><div class="feature-name">Банды</div></div>
+                    <div class="feature-card"><div class="feature-icon">🏛️</div><div class="feature-name">Гос-во</div></div>
+                    <div class="feature-card"><div class="feature-icon">📈</div><div class="feature-name">Биржа</div></div>
+                    <div class="feature-card"><div class="feature-icon">🎓</div><div class="feature-name">Обучение</div></div>
+                </div>
+            </div>
+
+            <!-- СЕРВЕРА -->
+            <div id="tab-servers" class="tab">
+                <h2 class="section-title">🌐 НАШИ СЕРВЕРА</h2>
+                
+                <div class="server-card" onclick="connectToServer('51.89.123.45:22003')">
+                    <div class="server-dot online"></div>
+                    <div class="server-info">
+                        <div class="server-name">CAMP #1 | LEGENDARY</div>
+                        <div class="server-meta">👥 85/200 • 🗺️ Los Santos • 🎮 RP</div>
+                    </div>
+                    <span class="server-ping">45ms</span>
+                    <button class="server-btn">ИГРАТЬ</button>
+                </div>
+                
+                <div class="server-card" onclick="connectToServer('51.89.123.46:22003')">
+                    <div class="server-dot online"></div>
+                    <div class="server-info">
+                        <div class="server-name">CAMP #2 | PREMIUM</div>
+                        <div class="server-meta">👥 42/100 • 🗺️ San Fierro • 🎮 RPG</div>
+                    </div>
+                    <span class="server-ping">52ms</span>
+                    <button class="server-btn">ИГРАТЬ</button>
+                </div>
+                
+                <div class="server-card" onclick="connectToServer('51.89.123.47:22003')">
+                    <div class="server-dot online"></div>
+                    <div class="server-info">
+                        <div class="server-name">CAMP #3 | FREEROAM</div>
+                        <div class="server-meta">👥 128/300 • 🗺️ Las Venturas • 🎮 Free</div>
+                    </div>
+                    <span class="server-ping">38ms</span>
+                    <button class="server-btn">ИГРАТЬ</button>
+                </div>
+            </div>
+
+            <!-- СИСТЕМЫ -->
+            <div id="tab-features" class="tab">
+                <h2 class="section-title">🚀 ВСЕ СИСТЕМЫ (53+)</h2>
+                
+                <div class="features-grid">
+                    <div class="feature-card"><div class="feature-icon">🏎️</div><div class="feature-name">100+ Машин</div></div>
+                    <div class="feature-card"><div class="feature-icon">👤</div><div class="feature-name">200+ Скинов</div></div>
+                    <div class="feature-card"><div class="feature-icon">🎨</div><div class="feature-name">3D HUD</div></div>
+                    <div class="feature-card"><div class="feature-icon">🛡️</div><div class="feature-name">Античит v7</div></div>
+                    <div class="feature-card"><div class="feature-icon">🤖</div><div class="feature-name">Антибот</div></div>
+                    <div class="feature-card"><div class="feature-icon">💎</div><div class="feature-name">Донат</div></div>
+                    <div class="feature-card"><div class="feature-icon">🎫</div><div class="feature-name">Пропуска</div></div>
+                    <div class="feature-card"><div class="feature-icon">🏠</div><div class="feature-name">Элитные дома</div></div>
+                    <div class="feature-card"><div class="feature-icon">💼</div><div class="feature-name">Бизнесы</div></div>
+                    <div class="feature-card"><div class="feature-icon">📈</div><div class="feature-name">Биржа</div></div>
+                    <div class="feature-card"><div class="feature-icon">🏦</div><div class="feature-name">Банки</div></div>
+                    <div class="feature-card"><div class="feature-icon">💵</div><div class="feature-name">Налоги</div></div>
+                    <div class="feature-card"><div class="feature-icon">🔫</div><div class="feature-name">Банды</div></div>
+                    <div class="feature-card"><div class="feature-icon">⚔️</div><div class="feature-name">Войны</div></div>
+                    <div class="feature-card"><div class="feature-icon">🏛️</div><div class="feature-name">Гос-во</div></div>
+                    <div class="feature-card"><div class="feature-icon">🗳️</div><div class="feature-name">Выборы</div></div>
+                    <div class="feature-card"><div class="feature-icon">⚖️</div><div class="feature-name">Суд</div></div>
+                    <div class="feature-card"><div class="feature-icon">🎓</div><div class="feature-name">Образование</div></div>
+                    <div class="feature-card"><div class="feature-icon">🏥</div><div class="feature-name">Медицина</div></div>
+                    <div class="feature-card"><div class="feature-icon">💍</div><div class="feature-name">Семьи</div></div>
+                    <div class="feature-card"><div class="feature-icon">🎰</div><div class="feature-name">Казино</div></div>
+                    <div class="feature-card"><div class="feature-icon">🎁</div><div class="feature-name">Кейсы</div></div>
+                    <div class="feature-card"><div class="feature-icon">🔧</div><div class="feature-name">Крафт</div></div>
+                    <div class="feature-card"><div class="feature-icon">👷</div><div class="feature-name">12 Работ</div></div>
+                    <div class="feature-card"><div class="feature-icon">🐾</div><div class="feature-name">Питомцы</div></div>
+                    <div class="feature-card"><div class="feature-icon">🏆</div><div class="feature-name">Достижения</div></div>
+                    <div class="feature-card"><div class="feature-icon">📋</div><div class="feature-name">Квесты</div></div>
+                    <div class="feature-card"><div class="feature-icon">🎯</div><div class="feature-name">Ограбления</div></div>
+                    <div class="feature-card"><div class="feature-icon">📱</div><div class="feature-name">Телефон</div></div>
+                    <div class="feature-card"><div class="feature-icon">🚁</div><div class="feature-name">Авиация</div></div>
+                </div>
+            </div>
+
+            <!-- АККАУНТ -->
+            <div id="tab-account" class="tab">
+                <h2 class="section-title">👤 ЛИЧНЫЙ КАБИНЕТ</h2>
+                
+                <div style="background:var(--card);border-radius:var(--radius2);padding:30px;text-align:center;border:1px solid var(--border);">
+                    <div style="font-size:80px;margin-bottom:16px;">👤</div>
+                    <h3 style="color:var(--gold);">Войдите в аккаунт</h3>
+                    <p style="color:var(--text2);font-size:14px;margin:8px 0;">Для доступа к личному кабинету необходимо войти через лаунчер</p>
+                    
+                    <button class="btn btn-primary" onclick="switchTab('launcher')">
+                        📥 СКАЧАТЬ ЛАУНЧЕР
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ФУТЕР -->
+        <div class="footer">
+            <div class="footer-social">
+                <div class="social-btn">📘</div>
+                <div class="social-btn">📨</div>
+                <div class="social-btn">📷</div>
+                <div class="social-btn">🎵</div>
+            </div>
+            <p class="footer-text">© 2024 CAMP CRIMINAL RUSSIA v8.0 — ABSOLUTE EDITION</p>
+            <p class="footer-text">Все права защищены. Сделано с ❤️</p>
         </div>
     </div>
 
+    <!-- TOAST КОНТЕЙНЕР -->
+    <div class="toast-container" id="toastContainer"></div>
+
     <script>
-        // SWITCH TABS
+        // ============ ПРЕЛОАДЕР ============
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                document.getElementById('preloader').classList.add('hidden');
+            }, 2000);
+        });
+
+        // ============ ЧАСТИЦЫ ============
+        function createParticles() {
+            const container = document.getElementById('particles');
+            const colors = ['#ffd700', '#ffed4a', '#ff8800', '#ff4444', '#4488ff', '#00ff88', '#aa44ff'];
+            
+            for (let i = 0; i < 30; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                
+                const size = Math.random() * 4 + 2;
+                const color = colors[Math.floor(Math.random() * colors.length)];
+                const left = Math.random() * 100;
+                const duration = Math.random() * 10 + 10;
+                const delay = Math.random() * 10;
+                
+                particle.style.cssText = `
+                    width: ${size}px;
+                    height: ${size}px;
+                    background: ${color};
+                    left: ${left}%;
+                    animation-duration: ${duration}s;
+                    animation-delay: ${delay}s;
+                    box-shadow: 0 0 ${size * 3}px ${color};
+                `;
+                
+                container.appendChild(particle);
+            }
+        }
+
+        createParticles();
+
+        // ============ ПЕРЕКЛЮЧЕНИЕ ВКЛАДОК ============
         function switchTab(tabName) {
             document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
             document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
@@ -454,66 +1188,136 @@
             const tab = document.getElementById('tab-' + tabName);
             if (tab) tab.classList.add('active');
             
-            event.target.classList.add('active');
+            const buttons = document.querySelectorAll('.nav-btn');
+            buttons.forEach(btn => {
+                if (btn.textContent.toLowerCase().includes(
+                    tabName === 'home' ? 'главная' : 
+                    tabName === 'launcher' ? 'лаунчер' : 
+                    tabName === 'servers' ? 'сервера' : 
+                    tabName === 'features' ? 'системы' : 'аккаунт'
+                )) {
+                    btn.classList.add('active');
+                }
+            });
+            
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
-        
-        // DOWNLOAD
+
+        // ============ СКАЧИВАНИЕ ============
         function startDownload() {
-            const progressBar = document.getElementById('progressBar');
+            const btn = document.getElementById('downloadBtn');
+            const progressContainer = document.getElementById('progressContainer');
             const progressFill = document.getElementById('progressFill');
             const progressText = document.getElementById('progressText');
             
-            progressBar.style.display = 'block';
-            progressText.style.display = 'block';
+            btn.disabled = true;
+            btn.textContent = '⏳ ЗАГРУЗКА...';
+            progressContainer.style.display = 'block';
             
             let progress = 0;
+            const steps = [
+                'Проверка версии...',
+                'Скачивание MTA Mobile...',
+                'Загрузка модов...',
+                'Установка систем...',
+                'Готово!'
+            ];
+            let stepIndex = 0;
+            
             const interval = setInterval(() => {
-                progress += Math.random() * 15;
+                progress += Math.random() * 8 + 2;
+                
                 if (progress >= 100) {
                     progress = 100;
                     clearInterval(interval);
-                    progressText.textContent = '✅ Скачивание началось!';
+                    progressFill.style.width = '100%';
+                    progressText.textContent = '✅ Загрузка завершена!';
+                    btn.textContent = '✅ ГОТОВО!';
+                    btn.className = 'btn btn-success';
                     
                     setTimeout(() => {
                         window.open('https://drive.google.com/uc?export=download&id=ВАШ_ID', '_blank');
-                    }, 500);
+                        showToast('📥 Скачивание началось!', 'success');
+                    }, 800);
+                    
+                    setTimeout(() => {
+                        btn.textContent = '📥 СКАЧАТЬ APK';
+                        btn.className = 'btn btn-primary';
+                        btn.disabled = false;
+                        progressContainer.style.display = 'none';
+                        progress = 0;
+                    }, 3000);
                 }
+                
                 progressFill.style.width = progress + '%';
-                progressText.textContent = Math.round(progress) + '%';
-            }, 300);
+                
+                const newStep = Math.floor(progress / 20);
+                if (newStep !== stepIndex && newStep < steps.length) {
+                    stepIndex = newStep;
+                    progressText.textContent = steps[stepIndex] + ' (' + Math.round(progress) + '%)';
+                }
+            }, 200);
         }
-        
-        // CONNECT SERVER
-        function connectServer(ip) {
+
+        // ============ ПОДКЛЮЧЕНИЕ К СЕРВЕРУ ============
+        function connectToServer(ip) {
             window.open('mtasa://connect/' + ip, '_blank');
+            
             setTimeout(() => {
                 if (!document.hidden) {
-                    showToast('📱 IP: ' + ip);
+                    showToast('📱 IP сервера: ' + ip + '\nОткройте MTA Mobile и введите IP вручную', 'info');
                 }
             }, 2000);
+            
+            showToast('🔌 Подключение к серверу...', 'info');
         }
-        
-        // TOAST
-        function showToast(msg) {
+
+        // ============ ТОСТ ============
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toastContainer');
             const toast = document.createElement('div');
             toast.className = 'toast';
-            toast.textContent = msg;
-            document.body.appendChild(toast);
-            setTimeout(() => toast.remove(), 3000);
+            toast.textContent = message;
+            
+            const colors = {
+                success: '#00ff88',
+                error: '#ff4444',
+                info: '#ffd700',
+                warning: '#ff8800'
+            };
+            
+            toast.style.borderColor = colors[type] || colors.info;
+            
+            container.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.remove();
+            }, 3000);
         }
-        
-        // ONLINE COUNTER
-        setInterval(() => {
-            document.getElementById('onlineCount').textContent = 
-                Math.floor(Math.random() * 500 + 1000).toLocaleString();
-        }, 10000);
-        
-        // PWA
+
+        // ============ ОНЛАЙН СЧЁТЧИК ============
+        function updateOnlineCount() {
+            const count = Math.floor(Math.random() * 500) + 1000;
+            document.getElementById('onlineCount').textContent = count.toLocaleString();
+        }
+
+        setInterval(updateOnlineCount, 8000);
+        updateOnlineCount();
+
+        // ============ PWA ============
         if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('/sw.js');
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js').catch(() => {});
+            });
         }
-        
-        console.log('🚀 CAMP CRIMINAL RUSSIA v5.0 LEGENDARY EDITION');
+
+        // ============ ОБРАБОТКА ОФЛАЙН ============
+        window.addEventListener('online', () => showToast('🌐 Интернет подключен', 'success'));
+        window.addEventListener('offline', () => showToast('📡 Вы офлайн', 'warning'));
+
+        console.log('🚀 CAMP CRIMINAL RUSSIA v8.0 ABSOLUTE EDITION');
+        console.log('🛡️ Защита: Античит + Антибот');
+        console.log('🏎️ Машин: 100+ | 👤 Скинов: 200+ | ⚙️ Систем: 53+');
     </script>
 </body>
-                      </html>
+                        </html>
