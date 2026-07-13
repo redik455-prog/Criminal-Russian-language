@@ -1,1 +1,84 @@
-
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="theme-color" content="#0a0a0a">
+    <link rel="manifest" href="manifest.json">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <title>🌆 GRAND MOBILE RP v5.0 — LEGACY</title>
+    <style>
+        :root{--bg:#0a0a0a;--card:#1a1a1a;--gold:#ffd700;--gold2:#b8960f;--green:#00ff88;--red:#ff4444;--blue:#4488ff;--purple:#aa44ff;--cyan:#00ddff;--orange:#ff8800;--pink:#ff44aa;--text:#fff;--text2:#aaa;--text3:#666}
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{background:var(--bg);color:var(--text);font-family:Arial;min-height:100vh}
+        .header{background:rgba(10,10,10,0.95);padding:12px 16px;display:flex;align-items:center;gap:10px;border-bottom:2px solid var(--gold2);position:sticky;top:0;z-index:1000}
+        .container{max-width:900px;margin:0 auto;padding:16px}
+        .hero{text-align:center;padding:30px 0}
+        .hero-logo{font-size:130px;animation:float 4s ease-in-out infinite}
+        @keyframes float{0%,100%{transform:translateY(0)rotate(0deg)}50%{transform:translateY(-25px)rotate(5deg)}}
+        .hero-title{font-size:34px;font-weight:900;background:linear-gradient(135deg,var(--gold),#ffed4a,var(--cyan),var(--orange),var(--gold));background-size:300%300%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;animation:shine 4s ease-in-out infinite}
+        @keyframes shine{0%,100%{background-position:0%50%}50%{background-position:100%50%}}
+        .badge{display:inline-block;padding:6px 16px;border-radius:25px;font-size:11px;font-weight:700;margin:4px}
+        .badge-gold{background:var(--gold);color:#000}.badge-green{background:var(--green);color:#000}.badge-red{background:var(--red);color:#fff;animation:pulse 2s infinite}@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(255,68,68,0.4)}50%{box-shadow:0 0 0 15px rgba(255,68,68,0)}}
+        .btn{display:block;width:100%;padding:18px;border:none;border-radius:16px;font-size:16px;font-weight:700;cursor:pointer;margin:10px 0;text-align:center;transition:all 0.3s}.btn:active{transform:scale(0.96)}
+        .btn-primary{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#000}.btn-success{background:var(--green);color:#000}
+        .stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:20px 0}
+        .stat-card{background:var(--card);padding:20px 8px;border-radius:16px;text-align:center;border:1px solid #2a2a2a}
+        .stat-val{font-size:22px;color:var(--gold);font-weight:800}
+        .features-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:20px 0}
+        .feature-card{background:var(--card);padding:20px 10px;border-radius:16px;text-align:center;border:1px solid #2a2a2a}
+        .feature-icon{font-size:36px;display:block;margin-bottom:8px}
+        .feature-name{font-size:13px;font-weight:600}
+        .footer{text-align:center;padding:30px 0;border-top:1px solid #222;margin-top:40px;font-size:12px;color:var(--text3)}
+    </style>
+</head>
+<body>
+    <div class="header">
+        <span style="font-size:28px">🌆</span>
+        <span style="flex:1;font-size:16px;color:var(--gold);font-weight:900">GRAND MOBILE RP</span>
+        <span class="badge badge-green">v5.0</span>
+    </div>
+    
+    <div class="container">
+        <div class="hero">
+            <div class="hero-logo">👑</div>
+            <h1 class="hero-title">GRAND MOBILE RP v5.0</h1>
+            <p><span class="badge badge-gold">100+ СИСТЕМ</span><span class="badge badge-green">5000+ ДОМОВ</span><span class="badge badge-red">20000+ МАШИН</span></p>
+        </div>
+        
+        <div class="stats-grid">
+            <div class="stat-card"><div class="stat-val">100+</div><div style="font-size:10px;color:var(--text3)">СИСТЕМ</div></div>
+            <div class="stat-card"><div class="stat-val">5000+</div><div style="font-size:10px;color:var(--text3)">ДОМОВ</div></div>
+            <div class="stat-card"><div class="stat-val">20000+</div><div style="font-size:10px;color:var(--text3)">МАШИН</div></div>
+            <div class="stat-card"><div class="stat-val">25</div><div style="font-size:10px;color:var(--text3)">НАВЫКОВ</div></div>
+        </div>
+        
+        <button class="btn btn-primary" onclick="downloadGame()">📥 СКАЧАТЬ SA:MP MOBILE</button>
+        <button class="btn btn-success" onclick="connectToServer()">🎮 ПОДКЛЮЧИТЬСЯ</button>
+        
+        <h3 style="color:var(--gold);margin:20px 0">⚙️ НОВЫЕ СИСТЕМЫ v5.0:</h3>
+        <div class="features-grid">
+            <div class="feature-card"><span class="feature-icon">🏢</span><span class="feature-name">Компании</span></div>
+            <div class="feature-card"><span class="feature-icon">🏦</span><span class="feature-name">Ограбления</span></div>
+            <div class="feature-card"><span class="feature-icon">⚔️</span><span class="feature-name">Turf Wars</span></div>
+            <div class="feature-card"><span class="feature-icon">🏃</span><span class="feature-name">Паркур</span></div>
+            <div class="feature-card"><span class="feature-icon">🏕️</span><span class="feature-name">Выживание</span></div>
+            <div class="feature-card"><span class="feature-icon">🏁</span><span class="feature-name">Гонки</span></div>
+            <div class="feature-card"><span class="feature-icon">🪙</span><span class="feature-name">Криптовалюты</span></div>
+            <div class="feature-card"><span class="feature-icon">🚀</span><span class="feature-name">Космос</span></div>
+            <div class="feature-card"><span class="feature-icon">🌐</span><span class="feature-name">Метавселенная</span></div>
+            <div class="feature-card"><span class="feature-icon">🏠</span><span class="feature-name">Умный дом</span></div>
+            <div class="feature-card"><span class="feature-icon">💝</span><span class="feature-name">Благотворительность</span></div>
+            <div class="feature-card"><span class="feature-icon">🎉</span><span class="feature-name">Фестивали</span></div>
+        </div>
+    </div>
+    
+    <div class="footer">© 2024 GRAND MOBILE RP v5.0 LEGACY | 100+ Систем | Финальная версия</div>
+    
+    <script>
+        function downloadGame(){window.open('https://www.mediafire.com/file/ЗАМЕНИТЕ/samp.apk/file','_blank');alert('📥 Скачивание началось!')}
+        function connectToServer(){alert('📱 IP: 51.89.123.45:7777\n\n1. Откройте SA:MP Mobile\n2. Добавьте сервер\n3. Введите IP')}
+        if('serviceWorker'in navigator)navigator.serviceWorker.register('/sw.js');
+    </script>
+</body>
+</html>
