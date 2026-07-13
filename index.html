@@ -1,0 +1,1115 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#0a0a0a">
+    <meta name="description" content="Criminal Russia Mobile - Лаунчер для установки игры">
+    
+    <!-- PWA -->
+    <link rel="manifest" href="data:application/json,{}">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏙️</text></svg>">
+    
+    <title>Criminal Russia - Лаунчер</title>
+    
+    <style>
+        /* ========== ОСНОВНЫЕ СТИЛИ ========== */
+        :root {
+            --bg: #0a0a0a;
+            --bg2: #111111;
+            --card: #1a1a1a;
+            --gold: #ffd700;
+            --gold2: #b8960f;
+            --text: #ffffff;
+            --text2: #aaaaaa;
+            --text3: #666666;
+            --green: #00ff00;
+            --red: #ff4444;
+            --blue: #4488ff;
+            --border: #2a2a2a;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            -webkit-tap-highlight-color: transparent;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* ========== ШАПКА ========== */
+        .header {
+            background: var(--bg2);
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 2px solid var(--gold2);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-logo {
+            font-size: 28px;
+        }
+
+        .header-title {
+            flex: 1;
+            font-size: 16px;
+            color: var(--gold);
+            font-weight: 900;
+            letter-spacing: 1px;
+        }
+
+        .header-version {
+            font-size: 11px;
+            color: var(--text3);
+            background: var(--card);
+            padding: 4px 8px;
+            border-radius: 4px;
+        }
+
+        /* ========== НАВИГАЦИЯ ========== */
+        .nav {
+            display: flex;
+            background: var(--bg2);
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 54px;
+            z-index: 99;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .nav::-webkit-scrollbar {
+            display: none;
+        }
+
+        .nav-btn {
+            flex: 1 0 auto;
+            padding: 12px 16px;
+            background: none;
+            border: none;
+            color: var(--text2);
+            font-size: 13px;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.3s;
+            border-bottom: 2px solid transparent;
+            min-width: 70px;
+            text-align: center;
+        }
+
+        .nav-btn.active {
+            color: var(--gold);
+            border-bottom-color: var(--gold);
+            font-weight: bold;
+        }
+
+        /* ========== КОНТЕНТ ========== */
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 16px;
+        }
+
+        .tab {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .tab.active {
+            display: block;
+        }
+
+        /* ========== ЛАУНЧЕР ========== */
+        .launcher-card {
+            background: var(--card);
+            border-radius: 16px;
+            padding: 24px;
+            text-align: center;
+            border: 1px solid var(--border);
+            margin-bottom: 20px;
+        }
+
+        .launcher-icon {
+            font-size: 64px;
+            margin-bottom: 16px;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .launcher-title {
+            font-size: 22px;
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: var(--gold);
+        }
+
+        .launcher-desc {
+            color: var(--text2);
+            font-size: 14px;
+            margin-bottom: 24px;
+            line-height: 1.5;
+        }
+
+        /* ========== КНОПКИ ========== */
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+            transition: all 0.3s;
+            margin-bottom: 10px;
+        }
+
+        .btn:active {
+            transform: scale(0.97);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            pointer-events: none;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--gold), var(--gold2));
+            color: #000;
+            font-size: 16px;
+            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.2);
+        }
+
+        .btn-secondary {
+            background: var(--bg2);
+            color: var(--text);
+            border: 1px solid var(--border);
+        }
+
+        .btn-success {
+            background: #00cc00;
+            color: #fff;
+        }
+
+        .btn-danger {
+            background: var(--red);
+            color: #fff;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn-group .btn {
+            flex: 1;
+        }
+
+        /* ========== ПРОГРЕСС ========== */
+        .progress-container {
+            display: none;
+            margin: 16px 0;
+        }
+
+        .progress-info {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 12px;
+        }
+
+        .progress-label {
+            color: var(--text2);
+        }
+
+        .progress-percent {
+            color: var(--gold);
+            font-weight: bold;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: var(--border);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 8px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--gold), #ffed4a);
+            border-radius: 4px;
+            width: 0%;
+            transition: width 0.5s;
+        }
+
+        .progress-status {
+            font-size: 12px;
+            color: var(--text3);
+            text-align: center;
+        }
+
+        /* ========== СТАТУС ========== */
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-bottom: 16px;
+        }
+
+        .status-badge.installed {
+            background: rgba(0, 255, 0, 0.1);
+            color: var(--green);
+            border: 1px solid rgba(0, 255, 0, 0.3);
+        }
+
+        .status-badge.not-installed {
+            background: rgba(255, 68, 68, 0.1);
+            color: var(--red);
+            border: 1px solid rgba(255, 68, 68, 0.3);
+        }
+
+        /* ========== ШАГИ ========== */
+        .steps {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        .step {
+            background: var(--bg2);
+            padding: 16px 8px;
+            border-radius: 12px;
+            text-align: center;
+            border: 1px solid var(--border);
+        }
+
+        .step-num {
+            width: 28px;
+            height: 28px;
+            background: var(--gold);
+            color: #000;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+
+        .step-title {
+            font-size: 13px;
+            font-weight: bold;
+            margin-bottom: 4px;
+        }
+
+        .step-desc {
+            font-size: 11px;
+            color: var(--text3);
+        }
+
+        /* ========== ФУНКЦИИ ========== */
+        .features {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        .feature {
+            background: var(--card);
+            padding: 12px;
+            border-radius: 12px;
+            text-align: center;
+            font-size: 13px;
+            border: 1px solid var(--border);
+        }
+
+        /* ========== СЕРВЕРА ========== */
+        .server-card {
+            background: var(--card);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 10px;
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .server-dot {
+            width: 10px;
+            height: 10px;
+            background: var(--green);
+            border-radius: 50%;
+            box-shadow: 0 0 8px rgba(0, 255, 0, 0.5);
+            flex-shrink: 0;
+        }
+
+        .server-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .server-name {
+            font-weight: bold;
+            font-size: 14px;
+            margin-bottom: 4px;
+        }
+
+        .server-meta {
+            font-size: 11px;
+            color: var(--text2);
+        }
+
+        .server-connect {
+            padding: 8px 16px;
+            background: var(--gold);
+            color: #000;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 12px;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        /* ========== МОДЫ ========== */
+        .mods-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+        }
+
+        .mod-card {
+            background: var(--card);
+            border-radius: 12px;
+            padding: 16px;
+            text-align: center;
+            border: 1px solid var(--border);
+        }
+
+        .mod-emoji {
+            font-size: 36px;
+            margin-bottom: 8px;
+        }
+
+        .mod-name {
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 4px;
+        }
+
+        .mod-size {
+            font-size: 11px;
+            color: var(--text3);
+            margin-bottom: 8px;
+        }
+
+        .mod-status {
+            font-size: 11px;
+            padding: 4px 8px;
+            border-radius: 4px;
+            display: inline-block;
+        }
+
+        .mod-status.installed {
+            background: rgba(0, 255, 0, 0.1);
+            color: var(--green);
+        }
+
+        .mod-status.not-installed {
+            background: rgba(255, 68, 68, 0.1);
+            color: var(--red);
+        }
+
+        /* ========== ЛОГ УСТАНОВКИ ========== */
+        .install-log {
+            background: #000;
+            border-radius: 8px;
+            padding: 12px;
+            margin-top: 16px;
+            font-family: monospace;
+            font-size: 11px;
+            max-height: 200px;
+            overflow-y: auto;
+            display: none;
+        }
+
+        .log-line {
+            padding: 2px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .log-line.success {
+            color: var(--green);
+        }
+
+        .log-line.error {
+            color: var(--red);
+        }
+
+        .log-line.info {
+            color: var(--blue);
+        }
+
+        .log-line.warning {
+            color: var(--gold);
+        }
+
+        /* ========== ТОСТ ========== */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--card);
+            color: var(--text);
+            padding: 12px 24px;
+            border-radius: 12px;
+            border: 1px solid var(--gold);
+            z-index: 9999;
+            font-size: 14px;
+            white-space: nowrap;
+            animation: slideUp 0.3s ease;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateX(-50%) translateY(20px); }
+            to { opacity: 1; transform: translateX(-50%) translateY(0); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .pulse {
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        /* ========== МОДАЛКА ========== */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal {
+            background: var(--card);
+            border-radius: 16px;
+            padding: 24px;
+            width: 90%;
+            max-width: 400px;
+            border: 1px solid var(--border);
+        }
+
+        .modal-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 16px;
+            color: var(--gold);
+        }
+
+        .modal-text {
+            font-size: 14px;
+            color: var(--text2);
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        /* ========== АДАПТИВ ========== */
+        @media (max-width: 400px) {
+            .steps {
+                grid-template-columns: 1fr;
+            }
+            
+            .features {
+                grid-template-columns: 1fr;
+            }
+            
+            .mods-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .launcher-title {
+                font-size: 18px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- ШАПКА -->
+    <header class="header">
+        <span class="header-logo">🏙️</span>
+        <span class="header-title">CRIMINAL RUSSIA</span>
+        <span class="header-version">v3.0.0</span>
+    </header>
+
+    <!-- НАВИГАЦИЯ -->
+    <nav class="nav">
+        <button class="nav-btn active" onclick="switchTab('launcher')">📥 Лаунчер</button>
+        <button class="nav-btn" onclick="switchTab('servers')">🌐 Сервера</button>
+        <button class="nav-btn" onclick="switchTab('mods')">📦 Моды</button>
+        <button class="nav-btn" onclick="switchTab('info')">ℹ️ Инфо</button>
+    </nav>
+
+    <!-- КОНТЕНТ -->
+    <div class="container">
+        
+        <!-- ВКЛАДКА ЛАУНЧЕР -->
+        <div id="tab-launcher" class="tab active">
+            <div class="launcher-card">
+                <div class="launcher-icon">🏙️</div>
+                <h2 class="launcher-title">ЛАУНЧЕР CRIMINAL RUSSIA</h2>
+                <p class="launcher-desc">Автоматическая установка игры, модов и подключение к серверу в один клик!</p>
+                
+                <!-- Статус установки -->
+                <div id="statusBadge"></div>
+                
+                <!-- Шаги -->
+                <div class="steps">
+                    <div class="step">
+                        <div class="step-num">1</div>
+                        <div class="step-title">Скачать</div>
+                        <div class="step-desc">APK лаунчер</div>
+                    </div>
+                    <div class="step">
+                        <div class="step-num">2</div>
+                        <div class="step-title">Установить</div>
+                        <div class="step-desc">Разрешить установку</div>
+                    </div>
+                    <div class="step">
+                        <div class="step-num">3</div>
+                        <div class="step-title">Играть</div>
+                        <div class="step-desc">Готово!</div>
+                    </div>
+                </div>
+                
+                <!-- Кнопки действий -->
+                <button class="btn btn-primary" id="mainActionBtn" onclick="startInstallation()">
+                    📥 УСТАНОВИТЬ ИГРУ
+                </button>
+                
+                <div class="btn-group">
+                    <button class="btn btn-secondary" onclick="checkStatus()">
+                        🔄 Проверить
+                    </button>
+                    <button class="btn btn-secondary" onclick="showInstallLog()">
+                        📋 Лог
+                    </button>
+                </div>
+                
+                <!-- Прогресс -->
+                <div class="progress-container" id="progressContainer">
+                    <div class="progress-info">
+                        <span class="progress-label" id="progressLabel">Подготовка...</span>
+                        <span class="progress-percent" id="progressPercent">0%</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progressFill"></div>
+                    </div>
+                    <div class="progress-status" id="progressStatus">Нажмите кнопку для начала установки</div>
+                </div>
+                
+                <!-- Лог установки -->
+                <div class="install-log" id="installLog"></div>
+            </div>
+            
+            <!-- Возможности -->
+            <h3 style="color: var(--gold); margin-bottom: 12px;">🚀 Что включает лаунчер:</h3>
+            <div class="features">
+                <div class="feature">📱 MTA Mobile</div>
+                <div class="feature">💼 Система бизнесов</div>
+                <div class="feature">🔫 Система банд</div>
+                <div class="feature">🏎️ Элитные авто</div>
+                <div class="feature">🎰 Казино</div>
+                <div class="feature">✈️ Авиация</div>
+                <div class="feature">⚔️ Клановые войны</div>
+                <div class="feature">🎨 Современный HUD</div>
+            </div>
+            
+            <!-- Предупреждение -->
+            <div style="background: rgba(255,215,0,0.05); border: 1px solid rgba(255,215,0,0.2); border-radius: 12px; padding: 12px; font-size: 12px; color: var(--text2); margin-bottom: 20px;">
+                ⚠️ При установке может появиться предупреждение безопасности. Нажмите <b>"Установить всё равно"</b> или <b>"Разрешить установку из неизвестных источников"</b> в настройках.
+            </div>
+        </div>
+
+        <!-- ВКЛАДКА СЕРВЕРА -->
+        <div id="tab-servers" class="tab">
+            <h3 style="color: var(--gold); margin-bottom: 16px;">🌐 НАШИ СЕРВЕРА</h3>
+            
+            <div class="server-card">
+                <div class="server-dot"></div>
+                <div class="server-info">
+                    <div class="server-name">Criminal Russia #1</div>
+                    <div class="server-meta">👥 85/200 • 🗺️ Los Santos • 📶 45ms</div>
+                </div>
+                <button class="server-connect" onclick="connectServer('51.89.123.45', '22003')">ИГРАТЬ</button>
+            </div>
+            
+            <div class="server-card">
+                <div class="server-dot"></div>
+                <div class="server-info">
+                    <div class="server-name">Criminal Russia #2</div>
+                    <div class="server-meta">👥 42/100 • 🗺️ San Fierro • 📶 52ms</div>
+                </div>
+                <button class="server-connect" onclick="connectServer('51.89.123.46', '22003')">ИГРАТЬ</button>
+            </div>
+            
+            <div class="server-card">
+                <div class="server-dot"></div>
+                <div class="server-info">
+                    <div class="server-name">Criminal Russia #3</div>
+                    <div class="server-meta">👥 128/300 • 🗺️ Las Venturas • 📶 38ms</div>
+                </div>
+                <button class="server-connect" onclick="connectServer('51.89.123.47', '22003')">ИГРАТЬ</button>
+            </div>
+            
+            <div style="background: var(--card); border-radius: 12px; padding: 16px; border: 1px solid var(--border); margin-top: 16px;">
+                <h4 style="color: var(--gold); margin-bottom: 8px;">📝 Как подключиться вручную:</h4>
+                <p style="font-size: 13px; color: var(--text2);">1. Откройте MTA Mobile</p>
+                <p style="font-size: 13px; color: var(--text2);">2. Нажмите "Добавить сервер"</p>
+                <p style="font-size: 13px; color: var(--text2);">3. Введите IP и порт</p>
+                <p style="font-size: 13px; color: var(--text2);">4. Нажмите "Подключиться"</p>
+            </div>
+        </div>
+
+        <!-- ВКЛАДКА МОДЫ -->
+        <div id="tab-mods" class="tab">
+            <h3 style="color: var(--gold); margin-bottom: 16px;">📦 МОДЫ В ЛАУНЧЕРЕ</h3>
+            <p style="color: var(--text2); font-size: 13px; margin-bottom: 16px;">Все моды устанавливаются автоматически вместе с лаунчером!</p>
+            
+            <div class="mods-grid">
+                <div class="mod-card">
+                    <div class="mod-emoji">🎨</div>
+                    <div class="mod-name">HUD Pack</div>
+                    <div class="mod-size">15.2 MB</div>
+                    <span class="mod-status installed">✅ Включено</span>
+                </div>
+                
+                <div class="mod-card">
+                    <div class="mod-emoji">🏎️</div>
+                    <div class="mod-name">Vehicle Pack</div>
+                    <div class="mod-size">124.5 MB</div>
+                    <span class="mod-status installed">✅ Включено</span>
+                </div>
+                
+                <div class="mod-card">
+                    <div class="mod-emoji">🔫</div>
+                    <div class="mod-name">Weapon Pack</div>
+                    <div class="mod-size">45.8 MB</div>
+                    <span class="mod-status installed">✅ Включено</span>
+                </div>
+                
+                <div class="mod-card">
+                    <div class="mod-emoji">🗺️</div>
+                    <div class="mod-name">Map Pack</div>
+                    <div class="mod-size">250.1 MB</div>
+                    <span class="mod-status installed">✅ Включено</span>
+                </div>
+                
+                <div class="mod-card">
+                    <div class="mod-emoji">🔊</div>
+                    <div class="mod-name">Sound Pack</div>
+                    <div class="mod-size">89.3 MB</div>
+                    <span class="mod-status not-installed">⏳ Скоро</span>
+                </div>
+                
+                <div class="mod-card">
+                    <div class="mod-emoji">💼</div>
+                    <div class="mod-name">Business Pack</div>
+                    <div class="mod-size">32.7 MB</div>
+                    <span class="mod-status installed">✅ Включено</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- ВКЛАДКА ИНФО -->
+        <div id="tab-info" class="tab">
+            <h3 style="color: var(--gold); margin-bottom: 16px;">ℹ️ О ПРОЕКТЕ</h3>
+            
+            <div class="launcher-card" style="text-align: left;">
+                <h4 style="color: var(--gold); margin-bottom: 8px;">🎮 Возможности сервера:</h4>
+                <p style="font-size: 13px; color: var(--text2); line-height: 1.8;">
+                    • 10+ типов бизнесов<br>
+                    • 5 банд с войнами за территории<br>
+                    • Элитные автомобили с тюнингом<br>
+                    • Казино (рулетка, блэкджек, слоты)<br>
+                    • Авиация (вертолёты и самолёты)<br>
+                    • Клановые войны (4 режима)<br>
+                    • Донат-магазин<br>
+                    • Система пропусков<br>
+                    • Современный HUD<br>
+                    • Облачное сохранение
+                </p>
+                
+                <h4 style="color: var(--gold); margin: 16px 0 8px;">📱 Требования:</h4>
+                <p style="font-size: 13px; color: var(--text2);">
+                    • Android 5.0 или выше<br>
+                    • Минимум 2 ГБ ОЗУ<br>
+                    • 500 МБ свободного места<br>
+                    • Стабильный интернет
+                </p>
+                
+                <h4 style="color: var(--gold); margin: 16px 0 8px;">📞 Контакты:</h4>
+                <p style="font-size: 13px; color: var(--text2);">
+                    • VK: vk.com/criminalrussia<br>
+                    • Telegram: @criminalrussia<br>
+                    • Discord: discord.gg/criminalrussia<br>
+                    • Email: support@criminalrussia.com
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- СКРИПТ ЛАУНЧЕРА -->
+    <script>
+        // ==================== СОСТОЯНИЕ ====================
+        const STATE = {
+            isInstalled: false,
+            isDownloading: false,
+            progress: 0,
+            logs: []
+        };
+
+        // Проверяем сохранённое состояние
+        if (localStorage.getItem('cr_installed') === 'true') {
+            STATE.isInstalled = true;
+        }
+
+        // ==================== ИНИЦИАЛИЗАЦИЯ ====================
+        function init() {
+            updateStatusBadge();
+            updateMainButton();
+            
+            // Показываем прогресс-бар
+            document.getElementById('progressContainer').style.display = 'block';
+            document.getElementById('progressStatus').textContent = STATE.isInstalled ? 
+                '✅ Игра установлена. Нажмите "Запустить" для игры.' : 
+                'Готов к установке. Нажмите кнопку ниже.';
+        }
+
+        // ==================== СТАТУС ====================
+        function updateStatusBadge() {
+            const badge = document.getElementById('statusBadge');
+            
+            if (STATE.isInstalled) {
+                badge.innerHTML = '<span class="status-badge installed">✅ ИГРА УСТАНОВЛЕНА</span>';
+            } else {
+                badge.innerHTML = '<span class="status-badge not-installed">❌ ИГРА НЕ УСТАНОВЛЕНА</span>';
+            }
+        }
+
+        function updateMainButton() {
+            const btn = document.getElementById('mainActionBtn');
+            
+            if (STATE.isDownloading) {
+                btn.textContent = '⏳ УСТАНОВКА...';
+                btn.disabled = true;
+                btn.className = 'btn btn-secondary';
+            } else if (STATE.isInstalled) {
+                btn.textContent = '🚀 ЗАПУСТИТЬ ИГРУ';
+                btn.onclick = launchGame;
+                btn.disabled = false;
+                btn.className = 'btn btn-success';
+            } else {
+                btn.textContent = '📥 УСТАНОВИТЬ ИГРУ';
+                btn.onclick = startInstallation;
+                btn.disabled = false;
+                btn.className = 'btn btn-primary';
+            }
+        }
+
+        // ==================== УСТАНОВКА ====================
+        function startInstallation() {
+            if (STATE.isDownloading) return;
+            
+            STATE.isDownloading = true;
+            STATE.progress = 0;
+            STATE.logs = [];
+            
+            updateMainButton();
+            addLog('info', '🚀 Начало установки...');
+            
+            const progressContainer = document.getElementById('progressContainer');
+            const progressFill = document.getElementById('progressFill');
+            const progressPercent = document.getElementById('progressPercent');
+            const progressLabel = document.getElementById('progressLabel');
+            const progressStatus = document.getElementById('progressStatus');
+            
+            progressContainer.style.display = 'block';
+            
+            // Симуляция установки
+            const steps = [
+                { label: 'Проверка системы...', progress: 5, time: 500 },
+                { label: 'Скачивание MTA Mobile APK...', progress: 25, time: 2000 },
+                { label: 'Установка MTA Mobile...', progress: 45, time: 1500 },
+                { label: 'Скачивание модов...', progress: 70, time: 2500 },
+                { label: 'Распаковка модов...', progress: 85, time: 1500 },
+                { label: 'Настройка сервера...', progress: 95, time: 1000 },
+                { label: 'Завершение установки...', progress: 100, time: 500 },
+            ];
+            
+            let currentStep = 0;
+            
+            function processNextStep() {
+                if (currentStep >= steps.length) {
+                    // Установка завершена
+                    STATE.isInstalled = true;
+                    STATE.isDownloading = false;
+                    localStorage.setItem('cr_installed', 'true');
+                    
+                    updateStatusBadge();
+                    updateMainButton();
+                    addLog('success', '✅ Установка успешно завершена!');
+                    progressStatus.textContent = '✅ Установка завершена! Можно запускать игру.';
+                    
+                    // Создаём ссылку на скачивание APK
+                    setTimeout(() => {
+                        downloadAPK();
+                    }, 1000);
+                    
+                    return;
+                }
+                
+                const step = steps[currentStep];
+                STATE.progress = step.progress;
+                
+                progressFill.style.width = step.progress + '%';
+                progressPercent.textContent = step.progress + '%';
+                progressLabel.textContent = step.label;
+                progressStatus.textContent = 'Выполняется: ' + step.label;
+                
+                addLog('info', '📦 ' + step.label);
+                
+                currentStep++;
+                setTimeout(processNextStep, step.time);
+            }
+            
+            processNextStep();
+        }
+
+        // ==================== СКАЧИВАНИЕ APK ====================
+        function downloadAPK() {
+            addLog('info', '📥 Открытие ссылки на скачивание APK...');
+            
+            // Прямая ссылка на APK файл (ЗАМЕНИТЕ НА СВОЮ!)
+            const apkUrl = 'https://github.com/criminalrussia/launcher/releases/download/v3.0.0/criminal_russia.apk';
+            
+            // Открываем в браузере
+            window.open(apkUrl, '_blank');
+            
+            showToast('📥 Скачивание APK началось!');
+        }
+
+        // ==================== ЗАПУСК ИГРЫ ====================
+        function launchGame() {
+            addLog('info', '🚀 Запуск игры...');
+            
+            // Пробуем открыть MTA
+            const mtaUrl = 'mtasa://connect/51.89.123.45:22003';
+            
+            // Создаём невидимый iframe
+            const iframe = document.createElement('iframe');
+            iframe.style.display = 'none';
+            iframe.src = mtaUrl;
+            document.body.appendChild(iframe);
+            
+            // Проверяем, открылось ли приложение
+            setTimeout(() => {
+                document.body.removeChild(iframe);
+                
+                if (!document.hidden) {
+                    // Приложение не открылось
+                    showToast('⚠️ MTA Mobile не установлен. Скачайте APK.');
+                    downloadAPK();
+                }
+            }, 2500);
+            
+            showToast('🚀 Запуск MTA Mobile...');
+        }
+
+        // ==================== ПОДКЛЮЧЕНИЕ К СЕРВЕРУ ====================
+        function connectServer(ip, port) {
+            const address = ip + ':' + port;
+            addLog('info', '🔌 Подключение к серверу: ' + address);
+            
+            const mtaUrl = 'mtasa://connect/' + address;
+            
+            const iframe = document.createElement('iframe');
+            iframe.style.display = 'none';
+            iframe.src = mtaUrl;
+            document.body.appendChild(iframe);
+            
+            setTimeout(() => {
+                document.body.removeChild(iframe);
+                
+                if (!document.hidden) {
+                    showModal(
+                        '📱 Подключение к серверу',
+                        'IP: <b>' + address + '</b><br><br>' +
+                        '1. Откройте MTA Mobile<br>' +
+                        '2. Нажмите "Добавить сервер"<br>' +
+                        '3. Введите IP: <b>' + ip + '</b><br>' +
+                        '4. Порт: <b>' + port + '</b><br>' +
+                        '5. Нажмите "Подключиться"'
+                    );
+                }
+            }, 2500);
+            
+            showToast('🔌 Подключение к ' + address);
+        }
+
+        // ==================== ПРОВЕРКА СТАТУСА ====================
+        function checkStatus() {
+            if (STATE.isInstalled) {
+                showToast('✅ Игра установлена!');
+            } else {
+                showToast('❌ Игра не установлена. Нажмите "Установить".');
+            }
+            
+            updateStatusBadge();
+            updateMainButton();
+            addLog('info', '🔄 Проверка статуса: ' + (STATE.isInstalled ? 'установлено' : 'не установлено'));
+        }
+
+        // ==================== ЛОГ ====================
+        function addLog(type, message) {
+            STATE.logs.push({ type, message, time: new Date().toLocaleTimeString() });
+            
+            const logDiv = document.getElementById('installLog');
+            const line = document.createElement('div');
+            line.className = 'log-line ' + type;
+            line.textContent = '[' + new Date().toLocaleTimeString() + '] ' + message;
+            logDiv.appendChild(line);
+            logDiv.scrollTop = logDiv.scrollHeight;
+        }
+
+        function showInstallLog() {
+            const logDiv = document.getElementById('installLog');
+            
+            if (logDiv.style.display === 'none' || logDiv.style.display === '') {
+                logDiv.style.display = 'block';
+                showToast('📋 Лог установки открыт');
+            } else {
+                logDiv.style.display = 'none';
+            }
+        }
+
+        // ==================== ТОСТ ====================
+        function showToast(message) {
+            // Удаляем старые тосты
+            document.querySelectorAll('.toast').forEach(t => t.remove());
+            
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.textContent = message;
+            document.body.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transition = 'opacity 0.3s';
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        // ==================== МОДАЛЬНОЕ ОКНО ====================
+        function showModal(title, text) {
+            const overlay = document.createElement('div');
+            overlay.className = 'modal-overlay';
+            overlay.onclick = function(e) {
+                if (e.target === overlay) overlay.remove();
+            };
+            
+            overlay.innerHTML = `
+                <div class="modal">
+                    <h3 class="modal-title">${title}</h3>
+                    <p class="modal-text">${text}</p>
+                    <button class="btn btn-primary" onclick="this.closest('.modal-overlay').remove()">OK</button>
+                </div>
+            `;
+            
+            document.body.appendChild(overlay);
+        }
+
+        // ==================== ПЕРЕКЛЮЧЕНИЕ ВКЛАДОК ====================
+        function switchTab(tabName) {
+            // Скрываем все вкладки
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            // Показываем нужную
+            document.getElementById('tab-' + tabName).classList.add('active');
+            
+            // Обновляем навигацию
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            // Сохраняем вкладку
+            localStorage.setItem('cr_tab', tabName);
+        }
+
+        // ==================== ИНИЦИАЛИЗАЦИЯ ====================
+        // Восстанавливаем последнюю вкладку
+        const savedTab = localStorage.getItem('cr_tab') || 'launcher';
+        document.addEventListener('DOMContentLoaded', () => {
+            init();
+            switchTab(savedTab);
+        });
+
+        // Обновление онлайна
+        setInterval(() => {
+            const onlineElements = document.querySelectorAll('.server-meta');
+            onlineElements.forEach(el => {
+                const randomPlayers = Math.floor(Math.random() * 50) + 50;
+                el.innerHTML = el.innerHTML.replace(/👥 \d+/, '👥 ' + randomPlayers);
+            });
+        }, 30000);
+
+        // Обработка офлайн/онлайн
+        window.addEventListener('online', () => showToast('🌐 Интернет подключен'));
+        window.addEventListener('offline', () => showToast('📡 Вы офлайн'));
+
+        console.log('🚀 Criminal Russia Launcher v3.0.0 загружен!');
+    </script>
+</body>
+  </html>
